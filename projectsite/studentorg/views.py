@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from typing import Any
+from django.db.models.query import QuerySet
+from django.db.models import Q
 from django.views.generic.list import ListView  
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization  
@@ -38,6 +41,8 @@ class ProgramDeleteView(DeleteView):
     template_name = 'program_del.html'  
     success_url = reverse_lazy('program-list')
 
+
+
 class OrganizationUpdateView(UpdateView):  
     model = Organization  
     form_class = OrganizationForm  
@@ -68,6 +73,8 @@ class ProgramUpdateView(UpdateView):
     template_name = 'program_edit.html'  
     success_url = reverse_lazy('program-list')
 
+
+
 class OrganizationCreateView(CreateView):
     model = Organization
     form_class = OrganizationForm
@@ -97,6 +104,8 @@ class ProgramCreateView(CreateView):
     form_class = ProgramForm
     template_name = 'program_add.html'
     success_url = reverse_lazy('program-list')
+
+
 
 class HomePageView(ListView):  
     model = Organization  
@@ -132,4 +141,12 @@ class ProgramList(ListView):
     context_object_name = 'program'  
     template_name = "program_list.html"
     paginate_by = 5
+
+def get_queryset(self, *args, **kwargs):  
+    qs = super(OrganizationList, StudentList, ProgramList, CollegeList, ProgramList, self).get_queryset(*args, **kwargs)  
+    if self.request.GET.get("q") != None:  
+        query = self.request.GET.get('q')  
+        qs = qs.filter(Q(name__icontains=query) |  
+                       Q(description__icontains=query))  
+    return qs  
 # Create your views here.
