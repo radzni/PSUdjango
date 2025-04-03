@@ -15,6 +15,10 @@ from studentorg.forms import OrgMemberForm
 from studentorg.models import Program  
 from studentorg.forms import ProgramForm
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
+@method_decorator(login_required, name='dispatch')
 
 class OrganizationDeleteView(DeleteView):  
     model = Organization  
