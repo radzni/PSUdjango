@@ -177,25 +177,31 @@
 						<li class="nav-item">
 							<a href="{% url 'organization-list' %}">
 								<i class="la la-table"></i>
-								<p>Organization</p>
+								<p>Organizations</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="forms.html">
-								<i class="la la-keyboard-o"></i>
+							<a href="{% url 'orgmember-list' %}">
+								<i class="la la-user-plus"></i>
 								<p>Org. Members</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="tables.html">
-								<i class="la la-th"></i>
-								<p>Student</p>
+							<a href="{% url 'student-list' %}">
+								<i class="la la-user-plus"></i>
+								<p>Students</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="notifications.html">
-								<i class="la la-bell"></i>
-								<p>College</p>
+							<a href="{% url 'college-list' %}">
+								<i class="la la-heart"></i>
+								<p>Colleges</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'program-list' %}">
+								<i class="la la-keyboard-o"></i>
+								<p>Programs</p>
 							</a>
 						</li>
 					</ul>
