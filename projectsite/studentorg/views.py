@@ -30,61 +30,34 @@ class OrganizationList(ListView):
     context_object_name = 'organization'  
     template_name = "org_list.html"
     paginate_by = 15  
-    
-def get_queryset(self, *args, **kwargs):  
-    qs = super(OrganizationList, self).get_queryset(*args, **kwargs)  
-    if self.request.GET.get("q") != None:  
-        query = self.request.GET.get('q')  
-        qs = qs.filter(Q(name__icontains=query) |  
-                       Q(description__icontains=query))  
-    return qs  
 
 class StudentList(ListView):  
     model = Student  
     context_object_name = 'student'  
     template_name = "student_list.html"
     paginate_by = 15  
-def get_queryset(self, *args, **kwargs):  
-    qs = super(StudentList, self).get_queryset(*args, **kwargs)  
-    if self.request.GET.get("q") != None:  
-        query = self.request.GET.get('q')  
-        qs = qs.filter(Q(name__icontains=query) |  
-                       Q(description__icontains=query))  
-    return qs  
+
 
 class OrgaMemberList(ListView):  
     model = OrgMember  
     context_object_name = 'orgmember'  
     template_name = "orgmember_list.html"
     paginate_by = 15
-def get_queryset(self, *args, **kwargs):  
-    qs = super(OrgaMemberList, self).get_queryset(*args, **kwargs)  
-    if self.request.GET.get("q") != None:  
-        query = self.request.GET.get('q')  
-        qs = qs.filter(Q(name__icontains=query) |  
-                       Q(description__icontains=query))  
-    return qs  
 
 class CollegeList(ListView):
     model = College  
     context_object_name = 'college'  
     template_name = "college_list.html"
     paginate_by = 15
-def get_queryset(self, *args, **kwargs):  
-    qs = super(CollegeList, self).get_queryset(*args, **kwargs)  
-    if self.request.GET.get("q") != None:  
-        query = self.request.GET.get('q')  
-        qs = qs.filter(Q(name__icontains=query) |  
-                       Q(description__icontains=query))  
-    return qs  
 
 class ProgramList(ListView):
     model = Program  
     context_object_name = 'program'  
     template_name = "program_list.html"
     paginate_by = 15
+    
 def get_queryset(self, *args, **kwargs):  
-    qs = super(ProgramList, self).get_queryset(*args, **kwargs)  
+    qs = super(ProgramList, OrgaMemberList, StudentList, OrganizationList, CollegeList, self).get_queryset(*args, **kwargs)  
     if self.request.GET.get("q") != None:  
         query = self.request.GET.get('q')  
         qs = qs.filter(Q(name__icontains=query) |  
