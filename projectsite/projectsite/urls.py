@@ -23,12 +23,13 @@ from studentorg.views import HomePageView, CollegeList, CollegeCreateView, Colle
 from studentorg.views import HomePageView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
 from studentorg import views  
 from django.contrib.auth import views as auth_views
-from fire.views import HomePageView, ChartView
+from fire.views import HomePageView, ChartView, PieCountbySeverity
 
 urlpatterns = [  
     path("admin/", admin.site.urls),  
     path('', views.HomePageView.as_view(), name="home"),  
     path('dashboard_chart', ChartView.as_view(), name='dashboard-chart'),
+    path('chart/', PieCountbySeverity, name='chart'),
     path('organization_list', OrganizationList.as_view(), name='organization-list'),
     path('organization_list/add', OrganizationCreateView.as_view(), name='organization-add'),
     path('organization_list/<pk>', OrganizationUpdateView.as_view(), name='organization-update'),

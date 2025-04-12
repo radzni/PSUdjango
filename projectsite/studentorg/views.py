@@ -2,13 +2,23 @@ from django.shortcuts import render
 from typing import Any
 from django.db.models.query import QuerySet 
 from django.db.models import Q
+
 from django.views.generic.list import ListView  
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization, Student, OrgMember, College, Program  
 from studentorg.forms import OrganizationForm, StudentForm, OrgMemberForm, CollegeForm, ProgramForm
+
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+
+from django.db import connection  
+from django.http import JsonResponse  
+from django.db.models.functions import ExtractMonth  
+
+from django.db.models import Count  
+from datetime import datetime 
+
 
 @method_decorator(login_required, name='dispatch')
 
@@ -103,7 +113,7 @@ class ProgramCreateView(CreateView):
 
 
 class HomePageView(ListView):  
-    model = Student
+    model = Organization
     context_object_name = 'home'  
     template_name = "home.html"
 
@@ -113,9 +123,28 @@ class ChartView(ListView):
     def get_context_data(self, **kwargs):  
         context = super().get_context_data(**kwargs)  
         return context  
-
+    
     def get_queryset(self, *args, **kwargs):  
         pass  
+
+def PieCountbySeverity(request):  
+    query = '''  
+    SELECT severity_level, COUNT(*) as count  
+    FROM fire_incident  
+    GROUP BY severity_level  
+    '''  
+    data = {}  
+    with connection.cursor() as cursor:  
+        cursor.execute(query)  
+        rows = cursor.fetchall()  
+
+    if rows:  
+        # Construct the dictionary with severity level as keys and count as values  
+        data = {severity: count for severity, count in rows}  
+    else:  
+        data = {}  
+
+    return JsonResponse(data)  
 
 class OrganizationList(ListView):  
     model = Organization  
