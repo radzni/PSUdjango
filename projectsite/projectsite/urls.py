@@ -23,7 +23,7 @@ from studentorg.views import HomePageView, CollegeList, CollegeCreateView, Colle
 from studentorg.views import HomePageView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
 from studentorg import views  
 from django.contrib.auth import views as auth_views
-from fire.views import HomePageView, ChartView, PieCountbySeverity
+from studentorg.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyMonth
 
 urlpatterns = [  
     path("admin/", admin.site.urls),  
