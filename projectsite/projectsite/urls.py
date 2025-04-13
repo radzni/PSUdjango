@@ -16,22 +16,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView
-from studentorg.views import HomePageView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView
-from studentorg.views import HomePageView, OrgaMemberList, OrgaMemberCreateView, OrgaMemberUpdateView, OrgaMemberDeleteView
-from studentorg.views import HomePageView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView
-from studentorg.views import HomePageView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
 from studentorg import views  
 from django.contrib.auth import views as auth_views
-from studentorg.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyMonth, MultilineIncidentTop3Country
+from studentorg.views import (
+    HomePageView, OrganizationList, OrganizationCreateView, 
+    OrganizationUpdateView, OrganizationDeleteView, CollegeList, 
+    CollegeCreateView, CollegeUpdateView, CollegeDeleteView, StudentList, 
+    StudentCreateView, StudentUpdateView, StudentDeleteView, ProgramList, 
+    ProgramCreateView, ProgramUpdateView, ProgramDeleteView, OrgaMemberList, 
+    OrgaMemberCreateView, OrgaMemberUpdateView, OrgaMemberDeleteView, ChartView,
+    GetOrgMembersPerYear, StudentViewByOrg, StudentViewByProg,
+)
+
+
 
 urlpatterns = [  
     path("admin/", admin.site.urls),  
-    path('', views.HomePageView.as_view(), name="home"),  
-    path('dashboard_chart', ChartView.as_view(), name='dashboard-chart'),
-    path('chart/', PieCountbySeverity, name='chart'),
-    path('line_chart/', LineCountbyMonth, name='chart'),
-    path('multiline_chart/', MultilineIncidentTop3Country, name='chart'),
+    path('', HomePageView.as_view(), name="home"),
+
+    path('charts', ChartView.as_view(), name='charts'),
+    path('student_count_by_program/', StudentViewByProg, name='chart'),
+    path('student-distribution-by-organization/', StudentViewByOrg, name='chart'),
+    path('org-members-per-year/', GetOrgMembersPerYear, name='chart'),
+    
+
     path('organization_list', OrganizationList.as_view(), name='organization-list'),
     path('organization_list/add', OrganizationCreateView.as_view(), name='organization-add'),
     path('organization_list/<pk>', OrganizationUpdateView.as_view(), name='organization-update'),
