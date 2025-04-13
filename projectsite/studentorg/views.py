@@ -29,15 +29,18 @@ class HomePageView(ListView):
     context_object_name = 'home'  
     template_name = "home.html"
 
-class ChartView(ListView):
-    template_name = 'chart.html'
+class ChartView(ListView):  
+    template_name = 'chart.html'  
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get_context_data(self, **kwargs):  
+        context = super().get_context_data(**kwargs)  
+        return context  
+    
+    def get_queryset(self, *args, **kwargs):  
+        pass  
 
-    def get_queryset(self, *args, **kwargs):
-        pass
+def ChartDashboardView(request):
+    return render(request, 'chart.html')
 
 def StudentViewByProg(request):
     with connection.cursor() as cursor:
@@ -76,6 +79,34 @@ def GetOrgMembersPerYear(request):
 
     data = list(members_per_year)
     return JsonResponse(data, safe=False)
+
+
+def StudentCountByCollegeView(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT c.college_name, COUNT(s.id) AS student_count
+            FROM studentorg_college c
+            LEFT JOIN studentorg_program p ON p.college_id = c.id
+            LEFT JOIN studentorg_student s ON s.program_id = p.id
+            GROUP BY c.college_name
+        """)
+        data = cursor.fetchall()
+
+    response_data = [{"college_name": row[0], "student_count": row[1]} for row in data]
+    return JsonResponse(response_data, safe=False)
+
+def OrganizationCountByCollegeView(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT c.college_name, COUNT(o.id) as org_count
+            FROM studentorg_college c
+            LEFT JOIN studentorg_organization o ON o.college_id = c.id
+            GROUP BY c.college_name
+        """)
+        data = cursor.fetchall()
+    
+    response_data = [{"college_name": row[0], "org_count": row[1]} for row in data]
+    return JsonResponse(response_data, safe=False)
 
 #########################################################################################################
 

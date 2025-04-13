@@ -25,7 +25,7 @@ from studentorg.views import (
     StudentCreateView, StudentUpdateView, StudentDeleteView, ProgramList, 
     ProgramCreateView, ProgramUpdateView, ProgramDeleteView, OrgaMemberList, 
     OrgaMemberCreateView, OrgaMemberUpdateView, OrgaMemberDeleteView, ChartView,
-    GetOrgMembersPerYear, StudentViewByOrg, StudentViewByProg,
+    GetOrgMembersPerYear, StudentViewByOrg, StudentViewByProg, OrganizationCountByCollegeView, StudentCountByCollegeView
 )
 
 
@@ -34,10 +34,13 @@ urlpatterns = [
     path("admin/", admin.site.urls),  
     path('', HomePageView.as_view(), name="home"),
 
-    path('charts', ChartView.as_view(), name='charts'),
-    path('student_count_by_program/', StudentViewByProg, name='chart'),
-    path('student-distribution-by-organization/', StudentViewByOrg, name='chart'),
-    path('org-members-per-year/', GetOrgMembersPerYear, name='chart'),
+    path('charts/', ChartView.as_view(), name='charts'),
+    path('student_count_by_program/', StudentViewByProg, name='student_count_by_program'),
+    path('student-distribution-by-organization/', StudentViewByOrg, name='student_distribution_by_organization'),
+    path('org-members-per-year/', GetOrgMembersPerYear, name='org_members_per_year'),
+    path('organization_count_by_college/', OrganizationCountByCollegeView, name='organization_count_by_college'),
+    path('student_count_by_college/', StudentCountByCollegeView, name='student_count_by_college'),
+
     
 
     path('organization_list', OrganizationList.as_view(), name='organization-list'),

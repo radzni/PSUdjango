@@ -1,7 +1,11 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <div class="content">
   <div class="container-fluid">
     <div class="row">
+
+      <!-- Header -->
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
@@ -10,96 +14,103 @@
           </div>
         </div>
       </div>
+
+      <!-- Students Per Program -->
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <div class="card-title">Number of Students Per Program</div>
           </div>
           <div class="card-body">
-            <div
-              class="chart-container"
-              style="position: relative; height: 400px"
-            >
-              <canvas
-                id="polarAreaChart"
-                style="width: 100%; height: 100%"
-              ></canvas>
+            <div class="chart-container" style="position: relative; height: 400px;">
+              <canvas id="polarAreaChart"></canvas>
             </div>
           </div>
         </div>
       </div>
 
-
+      <!-- Students by Organization -->
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <div class="card-title">Student Distribution by Organization</div>
           </div>
           <div class="card-body">
-            <div
-              class="chart-container"
-              style="position: relative; height: 400px"
-            >
-              <canvas
-                id="multipleLineChart"
-                style="width: 100%; height: 100%"
-              ></canvas>
+            <div class="chart-container" style="position: relative; height: 400px;">
+              <canvas id="multipleLineChart"></canvas>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Members Joined Per Year -->
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <div class="card-title">
-              Annual Count of Students Joined in an Organization
-            </div>
+            <div class="card-title">Annual Count of Students Joined in an Organization</div>
           </div>
           <div class="card-body">
-            <div
-              class="chart-container"
-              style="position: relative; height: 400px"
-            >
-              <canvas id="barChart" style="width: 100%; height: 100%"></canvas>
+            <div class="chart-container" style="position: relative; height: 400px;">
+              <canvas id="barChart"></canvas>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Student Count by College -->
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Student Count by College</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 400px">
+              <canvas id="lineChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organization Count by College -->
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Organization Count by College</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 400px">
+              <canvas id="orgBarChart" style="width: 100%; height: 100%"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-{% endblock %} {% block chart %}
+{% endblock %}
+
+{% block chart %}
 <script>
   function loadChartData() {
-    fetch('/student_count_by_program/')
-      .then((response) => response.json())
-      .then((data) => {
-        const programNames = data.map((item) => item.prog_name);
-        const studentCounts = data.map((item) => item.student_count);
+    // Student count by program
+    fetch("{% url 'student_count_by_program' %}")
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(item => item.prog_name);
+        const values = data.map(item => item.student_count);
 
-        const ctx = document.getElementById("polarAreaChart").getContext("2d");
-        new Chart(ctx, {
+        new Chart(document.getElementById("polarAreaChart"), {
           type: "polarArea",
           data: {
-            labels: programNames,
-            datasets: [
-              {
-                data: studentCounts,
-                backgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#4BC0C0",
-                  "#9966FF",
-                  "#FF9F40",
-                  "#00CED1",
-                  "#FFBF00",
-                  "#8A2BE2",
-                  "#7FFF00",
-                ],
-              },
-            ],
+            labels: labels,
+            datasets: [{
+              data: values,
+              backgroundColor: [
+                "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF",
+                "#FF9F40", "#00CED1", "#FFBF00", "#8A2BE2", "#7FFF00"
+              ]
+            }]
           },
           options: {
             responsive: true,
@@ -107,121 +118,141 @@
             plugins: {
               title: {
                 display: true,
-                text: "Student Count by Program",
-              },
-            },
-          },
+                text: "Student Count by Program"
+              }
+            }
+          }
         });
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-
-    fetch('/student-distribution-by-organization/')
-      .then((response) => response.json())
-      .then((data) => {
-        const nonZeroOrgs = data.filter((item) => item.student_count > 0);
-
-        const organizationNames = nonZeroOrgs.map((item) => item.name);
-        const studentCounts = nonZeroOrgs.map((item) => item.student_count);
-
-        const ctx = document
-          .getElementById("multipleLineChart")
-          .getContext("2d");
-        // Create the chart
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: organizationNames,
-            datasets: [
-              {
-                label: "Number of Students",
-                borderColor: "#1d7af3",
-                pointBorderColor: "#FFF",
-                pointBackgroundColor: "#1d7af3",
-                pointBorderWidth: 2,
-                pointHoverRadius: 4,
-                pointHoverBorderWidth: 1,
-                pointRadius: 4,
-                backgroundColor: "transparent",
-                fill: false,
-                borderWidth: 2,
-                data: studentCounts,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: {
-              position: "top",
-            },
-            tooltips: {
-              bodySpacing: 4,
-              mode: "nearest",
-              intersect: 0,
-              position: "nearest",
-              xPadding: 10,
-              yPadding: 10,
-              caretPadding: 10,
-            },
-            layout: {
-              padding: { left: 15, right: 15, top: 15, bottom: 15 },
-            },
-            scales: {
-              xAxes: [
-                {
-                  ticks: {
-                    autoSkip: true,
-                    maxRotation: 90,
-                    minRotation: 90,
-                  },
-                },
-              ],
-            },
-          },
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
       });
 
-    fetch('/org-members-per-year/')
-      .then((response) => response.json())
-      .then((data) => {
-        const years = data.map((item) => new Date(item.year).getFullYear());
-        const counts = data.map((item) => item.count);
-        const ctx = document.getElementById("barChart").getContext("2d");
-        new Chart(ctx, {
+    // Student distribution by organization
+    fetch("{% url 'student_distribution_by_organization' %}")
+      .then(response => response.json())
+      .then(data => {
+        const filtered = data.filter(item => item.student_count > 0);
+        const labels = filtered.map(item => item.name);
+        const values = filtered.map(item => item.student_count);
+
+        new Chart(document.getElementById("multipleLineChart"), {
           type: "bar",
           data: {
-            labels: years,
-            datasets: [
-              {
-                label: "Number of Students Joined",
-                backgroundColor: "rgb(23, 125, 255)",
-                borderColor: "rgb(23, 125, 255)",
-                data: counts,
-              },
-            ],
+            labels: labels,
+            datasets: [{
+              label: "Number of Students",
+              backgroundColor: "#1d7af3",
+              data: values
+            }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  },
-                },
-              ],
+              y: { beginAtZero: true },
+              x: {
+                ticks: {
+                  maxRotation: 90,
+                  minRotation: 90
+                }
+              }
+            }
+          }
+        });
+      });
+
+    // Org members per year
+    fetch("{% url 'org_members_per_year' %}")
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(item => new Date(item.year).getFullYear());
+        const values = data.map(item => item.count);
+
+        new Chart(document.getElementById("barChart"), {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Students Joined",
+              backgroundColor: "#177dff",
+              data: values
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      });
+
+    // Student count by college
+    fetch("{% url 'student_count_by_college' %}")
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(item => item.college_name);
+        const values = data.map(item => item.student_count);
+
+        new Chart(document.getElementById("lineChart"), {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Student Count by College",
+              data: values,
+              borderColor: "rgba(75, 192, 192, 1)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+
+
+    // Organization count by college
+    fetch("{% url 'organization_count_by_college' %}")
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(item => item.college_name);
+        const values = data.map(item => item.org_count);
+
+        new Chart(document.getElementById("orgBarChart"), {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Number of Organizations",
+              backgroundColor: "rgb(23, 125, 255)",
+              borderColor: "rgb(23, 125, 255)",
+              data: values,
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: [{
+                ticks: { beginAtZero: true },
+              }],
             },
           },
         });
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      .catch(error => console.error("Error fetching data:", error));
   }
+
   loadChartData();
 </script>
 {% endblock %}

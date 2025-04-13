@@ -15,7 +15,7 @@
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
-				<a href="#" class="logo">
+				<a href="{% url 'charts' %}" class="logo">
 					PSUSPHERE
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,13 +94,13 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{%static '/img/p1.jpg' %}" alt="user-img" width="36" class="img-circle"><span >carlo</span></span> </a>
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{%static '/img/profile2.jpg' %}" alt="user-img" width="36" class="img-circle"><span >Misajon Hassan</span></span> </a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="{% static '/img/1.jpg' %}" alt="user"></div>
+										<div class="u-img"><img src="{% static '/img/profile2.jpg' %}" alt="user"></div>
 										<div class="u-text">
-											<h4>Hizrian</h4>
+											<h4>Misajon Hassan</h4>
 											<p class="text-muted">hello</p><a href="#" class="btn btn-rounded btn-primary btn-sm">View Profile</a></div>
 										</div>
 									</li>
@@ -111,7 +111,7 @@
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
 									<div class="dropdown-divider"></div>
-									<form method="post" action="{% url 'logout' %}">
+									<form method="post" action="{% url 'login' %}" style="text-align: center;">
 										{% csrf_token %}
 										<button type="submit" class="btn btn-danger">Logout</button>
 									</form>									
@@ -126,12 +126,12 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="{% static '/img/p1.jpg' %}">
+							<img src="{% static '/img/profile2.jpg' %}">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									EmuZy
+									Misajon Hassan
 									<span class="user-level">Administrator</span>
 									<span class="caret"></span>
 								</span>
@@ -161,8 +161,8 @@
 					</div>
 					<ul class="nav">
 						<li class="nav-item">
-							<a href="{% url 'home' %}">
-								<i class="la la-dashboard"></i>
+							<a href="{% url 'charts' %}">
+								<i class="la la-pie-chart"></i>
 								<p>Dashboard</p>
 							</a>
 						</li>
@@ -190,12 +190,7 @@
 								<p>College</p>
 							</a>
 						</li>
-						<li class="nav-item active">
-							<a href="{% url 'charts' %}">
-								<i class="la la-pie-chart"></i>
-								<p>Charts</p>
-							</a>
-						<li class="nav-item active">
+						<li class="nav-item">
 							<a href="{% url 'program-list' %}">
 								<i class="la la-font"></i>
 								<p>Progams</p>
